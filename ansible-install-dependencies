@@ -40,11 +40,12 @@ for root, dirs, files in os.walk('roles'):
             process = subprocess.Popen(["ansible-galaxy", "list"], stdout=subprocess.PIPE)
             installedDeps = process.communicate()[0]
             installedDepsList = re.findall("^\s([^,]*)", installedDeps, re.M)
-
-            for item in data["dependencies"]:
-                if not item in installedDepsList and not os.path.isdir("roles/" + item):
-                    subprocess.call(["sudo", "ansible-galaxy", "install", item])
-                    installed += 1
+            requiredDeps = data["dependencies"]
+            if requiredDeps:
+                for item in requiredDeps:
+                    if not item in installedDepsList and not os.path.isdir("roles/" + item):
+                        subprocess.call(["sudo", "ansible-galaxy", "install", item])
+                        installed += 1
 
 if installed == 0:
     print "All Ansible galaxy dependencies already installed"
