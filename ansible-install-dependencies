@@ -39,7 +39,7 @@ for root, dirs, files in os.walk('roles'):
 
             process = subprocess.Popen(["ansible-galaxy", "list"], stdout=subprocess.PIPE)
             installedDeps = process.communicate()[0]
-            installedDepsList = re.findall("^\s([^,]*)", installedDeps, re.M)
+            installedDepsList = re.findall("^-\s([^,]*)", installedDeps, re.M)
             requiredDeps = data["dependencies"]
             if requiredDeps:
                 for item in requiredDeps:
