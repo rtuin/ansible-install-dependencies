@@ -27,6 +27,8 @@ import subprocess
 import os
 import re
 import sys
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 installed = 0
 for root, dirs, files in os.walk('roles'):
@@ -43,9 +45,16 @@ for root, dirs, files in os.walk('roles'):
             requiredDeps = data["dependencies"]
             if requiredDeps:
                 for item in requiredDeps:
-                    if not item in installedDepsList and not os.path.isdir("roles/" + item):
-                        subprocess.call(["sudo", "ansible-galaxy", "install", item])
-                        installed += 1
+                    pp.pprint( item )
+                    if isinstance(item, dict):
+                        role_name=item["role"]
+                    else:
+                        role_name=item 
+                    pp.pprint(role_name)
+                    if not role_name in installedDepsList:
+                        if not os.path.isdir("roles/" + role_name):
+                            subprocess.call(["sudo", "ansible-galaxy", "install", role_name])
+                            installed += 1
 
 if installed == 0:
     print "All Ansible galaxy dependencies already installed"
