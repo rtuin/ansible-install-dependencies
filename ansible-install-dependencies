@@ -48,9 +48,6 @@ for root, dirs, files in os.walk('roles'):
                     pp.pprint( item )
                     if isinstance(item, dict):
                         role_name=item["role"]
-                    else:
-                        role_name=item 
-                    pp.pprint(role_name)
                     if not role_name in installedDepsList:
                         if not os.path.isdir("roles/" + role_name):
                             subprocess.call(["sudo", "ansible-galaxy", "install", role_name])
